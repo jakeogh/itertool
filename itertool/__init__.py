@@ -1,1 +1,1 @@
-#from .itertool import itertool
+from .itertool import grouper
