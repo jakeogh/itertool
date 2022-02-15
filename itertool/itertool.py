@@ -24,18 +24,13 @@
 
 
 import os
+from itertools import zip_longest
+from pathlib import Path
 #import time
 #import sh
 from signal import SIG_DFL
 from signal import SIGPIPE
 from signal import signal
-
-#import sys
-import click
-
-signal(SIGPIPE, SIG_DFL)
-from itertools import zip_longest
-from pathlib import Path
 from typing import ByteString
 from typing import Generator
 from typing import Iterable
@@ -45,16 +40,18 @@ from typing import Sequence
 from typing import Tuple
 from typing import Union
 
-from asserttool import eprint
+#import sys
+import click
 from asserttool import ic
-from asserttool import nevd
 from asserttool import validate_slice
-#from asserttool import verify
-#from retry_on_exception import retry_on_exception
-from enumerate_input import enumerate_input
+from clicktool import tv
+from eprint import eprint
+from unmp import unmp
+
+signal(SIGPIPE, SIG_DFL)
 
 
-def true_items_in_iterator(iterator, verbose=False):
+def true_items_in_iterator(iterator, verbose: bool = False):
     if verbose:
         ic(iterator)
     answer = sum(x for x in iterator if x is True)
@@ -70,49 +67,3 @@ def grouper(iterable, n, fillvalue=None):
 def compact(items):
     return [item for item in items if item]
 
-
-@click.command()
-@click.argument("paths", type=str, nargs=-1)
-@click.argument("sysskel",
-                type=click.Path(exists=False,
-                                dir_okay=True,
-                                file_okay=False,
-                                allow_dash=False,
-                                path_type=Path,),
-                nargs=1,
-                required=True,)
-@click.argument("slice_syntax", type=validate_slice, nargs=1)
-@click.option('--verbose', is_flag=True)
-@click.option('--debug', is_flag=True)
-@click.option('--simulate', is_flag=True)
-@click.option('--ipython', is_flag=True)
-@click.pass_context
-def cli(ctx,
-        paths: Optional[tuple[str]],
-        sysskel: Path,
-        slice_syntax: str,
-        verbose: bool,
-        debug: bool,
-        simulate: bool,
-        ipython: bool,
-        ):
-
-    null, end, verbose, debug = nevd(ctx=ctx,
-                                     printn=False,
-                                     ipython=False,
-                                     verbose=verbose,
-                                     debug=debug,)
-
-    iterator = paths
-    del paths
-
-    index = 0
-    for index, path in enumerate_input(iterator=iterator,
-                                       dont_decode=True,  # paths are bytes
-                                       progress=False,
-                                       debug=debug,
-                                       verbose=verbose,):
-        path = Path(os.fsdecode(path))
-
-        if verbose:  # or simulate:
-            ic(index, path)
