@@ -36,7 +36,7 @@ signal(SIGPIPE, SIG_DFL)
 
 def true_items_in_iterator(
     iterator,
-    verbose: bool | int | float = False,
+    verbose: bool = False,
 ):
     if verbose:
         ic(iterator)
