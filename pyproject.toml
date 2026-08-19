@@ -1,0 +1,29 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "itertool"
+version = "1!0.0.1787109851"
+description = "Iteration helpers"
+authors = [
+    { name = "Justin Keogh", email = "github.com@v6y.net" },
+]
+dependencies = [
+    "click",
+]
+license = "ISC"
+requires-python = ">=3.11"
+
+[project.urls]
+Homepage = "https://github.com/jakeogh/itertool"
+
+[tool.setuptools]
+include-package-data = true
+zip-safe = false
+packages = ["itertool"]
+
+[tool.setuptools.package-data]
+itertool = [
+    "py.typed",
+]
